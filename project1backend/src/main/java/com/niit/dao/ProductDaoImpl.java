@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.niit.models.Category;
 import com.niit.models.Product;
 @Repository  
 @Transactional 
@@ -18,10 +19,7 @@ private SessionFactory sessionFactory;
 	public ProductDaoImpl(){
 		System.out.println("ProductDaoImpl bean is created..");
 	}
-	public void addProduct(Product product) {
-       Session session= sessionFactory.getCurrentSession();
-       session.save(product);//Generate insert query..
-	}
+	
 	public Product getProduct(int id) {
 		Session session=sessionFactory.getCurrentSession();
 		Product product=(Product)session.get(Product.class, id);
@@ -35,20 +33,26 @@ private SessionFactory sessionFactory;
 		session.delete(product);
 		//delete from product where id=3
 	}
-	public void updateProduct(Product product) {//product with updated properties
-		Session session=sessionFactory.getCurrentSession();
-		session.update(product);
-		//update product set pname=?,description=?,price=?,quantity=? where id=?
-	}
+	
 	public List<Product> getAllProducts() {
 		Session session=sessionFactory.getCurrentSession();
 		Query query=session.createQuery("from Product");
 		List<Product> products =query.list();
 		return products;
 	}
+
 	public void saveOrUpdate(Product product) {
-		// TODO Auto-generated method stub
-		
+		Session session=sessionFactory.getCurrentSession();
+		session.saveOrUpdate(product);
+		//product.id doesn't exists in the table, then insert
+		//product.id exists in the table, then update
+	}
+
+	public List<Category> getAllCategories() {
+		Session session=sessionFactory.getCurrentSession();
+		Query query=session.createQuery("from Category");
+		List<Category> categories=query.list();
+		return categories;
 	}
 	
 

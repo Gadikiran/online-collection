@@ -6,6 +6,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	var searchCondition='${searchCondition}'
+	$('.table').DataTable({
+		"lengthMenu":[[2,5,-1],[2,5,"All"]],
+	    "oSearch" : {
+		"sSearch" : searchCondition 
+		}
+	})
+})
+</script>
 </head>
 <body>
 	<%--  forEach is for iterating collection of objects
@@ -21,9 +33,9 @@ p=product object from the list
 		<thead>
 			<tr>
 			    <th>Product Id</th>
+			    <th>Image</th>
 				<th>Product Name</th>
-			
-				<th>description</th>
+				<th>Categoryname</th>
 				<th>Price</th>
 				<th>Action</th>
 			</tr>
@@ -32,13 +44,16 @@ p=product object from the list
 		<c:forEach items="${products }" var="p">
         <tr>
         <td>${p.id }</td>
+        <td><img src="<c:url value='/resources/images/${p.id}.png'></c:url>" height="40px" width="40px"></td>
         <td>${p.productname }</td>
-        <td>${p.description}</td>
+        <td>${p.category.categoryname}</td>
         <td>${p.price }</td>
         <td>
         <a href="<c:url value='/all/getproduct?id=${p.id }'></c:url>"><span class="glyphicon glyphicon-info-sign"></span></a>
+        <security:authorize access="hasRole('ROLE_ADMIN')">
         <a href="<c:url value='/admin/deleteproduct/${p.id }'></c:url>"><span class="glyphicon glyphicon-trash"></span></a>
-        
+        <a href="<c:url value='/admin/getupdateform?id=${p.id }'></c:url>"><span class="glyphicon glyphicon-pencil"></span></a>
+        </security:authorize>
         </td>
         </tr>
 		</c:forEach>
